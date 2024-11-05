@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WallDova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>WallDova</h1>
+
+        <!-- Вывод flash сообщений -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post">
+            <input type="text" name="name" placeholder="Ваше имя" value="{{ name }}" required>
+            <textarea name="message" placeholder="Ваше сообщение" maxlength="500" required></textarea>
+            <input type="submit" value="Отправить">
+        </form>
+
+        <div class="messages" id="messages">
+            <h2>Сообщения:</h2>
+            {% for message in messages %}
+                <div class="message">
+                    <strong>{{ message['name'] }}</strong>
+                    <p>{{ message['message'] }}</p>
+                    <small>{{ message['timestamp'] }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
