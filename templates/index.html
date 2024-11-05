@@ -38,5 +38,40 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        // Функция для обновления сообщений
+        function updateMessages() {
+            fetch('/api/messages')
+                .then(response => response.json())
+                .then(data => {
+                    const messagesContainer = document.getElementById('messages');
+                    messagesContainer.innerHTML = '<h2>Сообщения:</h2>'; // Очистка контейнера перед обновлением
+
+                    data.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message');
+
+                        const name = document.createElement('strong');
+                        name.textContent = message.name;
+
+                        const text = document.createElement('p');
+                        text.textContent = message.message;
+
+                        const timestamp = document.createElement('small');
+                        timestamp.textContent = message.timestamp;
+
+                        messageDiv.appendChild(name);
+                        messageDiv.appendChild(text);
+                        messageDiv.appendChild(timestamp);
+
+                        messagesContainer.appendChild(messageDiv);
+                    });
+                });
+        }
+
+        // Обновляем сообщения каждые 5 секунд
+        setInterval(updateMessages, 5000);
+    </script>
 </body>
 </html>
