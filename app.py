@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, make_response, flash
+from flask import Flask, render_template, request, redirect, make_response, flash, jsonify
 from datetime import datetime
 
 import sqlite3
@@ -55,24 +55,24 @@ def index():
 
     return render_template('index.html', messages=messages, name=request.cookies.get('name', ''))
 
-@app.route('/messages')
-def messages():
+# Новый маршрут для получения сообщений в формате JSON
+@app.route('/api/messages')
+def api_messages():
     conn = get_db_connection()
     messages = conn.execute('SELECT * FROM messages ORDER BY id DESC').fetchall()
     conn.close()
-    
+
     formatted_messages = []
     for message in messages:
         formatted_message = {
             'id': message['id'],
             'name': message['name'],
             'message': message['message'],
-            'ip': message['ip'],
             'timestamp': datetime.strptime(message['timestamp'], '%Y-%m-%d %H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
         }
         formatted_messages.append(formatted_message)
 
-    return render_template('messages.html', messages=formatted_messages)
+    return jsonify(formatted_messages)
 
 if __name__ == '__main__':
     init_db()
